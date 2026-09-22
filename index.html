@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Henry Bellorin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Moonrocks&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ==================== ENCABEZADO ==================== -->
+    <header class="hero">
+        <!-- Botón de Currículum en la esquina superior -->
+        <a href="Hoja de vida Henry Bellorin.pdf" class="btn-curriculum" target="_blank">📄 Currículum</a>
+
+        <div class="hero-contenido">
+            <svg class="nombre-svg" viewBox="0 0 900 140">
+                <text x="50%" y="50%" dy=".35em" text-anchor="middle" class="nombre-texto">Henry Bellorin</text>
+            </svg>
+            <p class="subtitulo">Técnico Superior en Informática | Desarrollo Web · Edición de Video</p>
+            <p class="descripcion">HTML · CSS · JavaScript · CapCut · Kdenlive</p>
+        </div>
+    </header>
+
+    <!-- ==================== FILTROS ==================== -->
+    <nav class="filtros">
+        <button class="filtro-btn activo" data-filtro="todos">Todos</button>
+        <button class="filtro-btn" data-filtro="web">Páginas Web</button>
+        <button class="filtro-btn" data-filtro="login">Logins</button>
+        <button class="filtro-btn" data-filtro="video">Videos</button>
+    </nav>
+
+    <!-- ==================== PROYECTOS ==================== -->
+    <main class="proyectos" id="proyectos">
+
+        <!-- Proyecto: Login con registro -->
+        <article class="tarjeta" data-categoria="login">
+           <div class="tarjeta-icono">
+    <img src="pngwing.com (1).png" alt="Logo del proyecto">
+</div>
+            <div class="tarjeta-info">
+                <span class="etiqueta">Login</span>
+                <h3>Carrucer Interastivo</h3>
+                <p>Diseño carruseles interactivos para visualizar fotos o textos de forma atractiva y dinámica.</p>
+                <div class="tarjeta-tags">
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span>
+                </div>
+                <a href="index3.html" class="tarjeta-link" target="_blank">Ver proyecto</a>
+            </div>
+        </article>
+
+        <!-- Proyecto: Login Samurái -->
+        <article class="tarjeta" data-categoria="login">
+           <div class="tarjeta-icono">
+    <img src="pngwing.com.png" alt="Logo del proyecto">
+</div>
+            <div class="tarjeta-info">
+                <span class="etiqueta">Login</span>
+                <h3>Login Samurái</h3>
+                <p>Pantalla de inicio de sesión con diseño temático de samurái, imagen personalizada y estilo visual llamativo.</p>
+                <div class="tarjeta-tags">
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span>
+                </div>
+                <a href="login_samurai_codigo.html" class="tarjeta-link" target="_blank">Ver proyecto</a>
+            </div>
+        </article>
+
+        <!-- Proyecto: Registro de horas -->
+        <article class="tarjeta" data-categoria="web">
+            <div class="tarjeta-icono">
+    <img src="pngwing.png" alt="Logo del proyecto">
+</div>
+            <div class="tarjeta-info">
+                <span class="etiqueta">Página Web</span>
+                <h3>Registro de Horas Extras</h3>
+                <p>Aplicación web para registrar fechas de trabajo y calcular horas extras. Alojada en la nube con GitHub Pages.</p>
+                <div class="tarjeta-tags">
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span>
+                </div>
+                <a href="https://henry186141083.github.io/horariohenry/" class="tarjeta-link">Ver proyecto</a>
+            </div>
+        </article>
+
+        <!-- Proyecto: Portfolio interactivo -->
+        <article class="tarjeta" data-categoria="web">
+            <div class="tarjeta-icono">
+    <img src="pngwing.com (3).png" alt="Logo del proyecto">
+</div>
+            <div class="tarjeta-info">
+                <span class="etiqueta">Página Web</span>
+                <h3>Animación Interactiva</h3>
+                <p> Desarrollé una página web con diseño interactivo Diseño interactivo fue uno de mis primeros proyectos...</p>
+                <div class="tarjeta-tags">
+                    <span>HTML</span><span>Canvas</span><span>JavaScript</span>
+                </div>
+                <a href="https://henry186141083.github.io/arturo2025" class="tarjeta-link">Ver proyecto</a>
+            </div>
+        </article>
+
+        <!-- Proyecto: Video 1 -->
+        <article class="tarjeta" data-categoria="video">
+            <div class="tarjeta-icono">
+    <img src="pngwing.com (9).png" alt="Logo del proyecto">
+</div>
+            <div class="tarjeta-info">
+                <span class="etiqueta">Video</span>
+                <h3>Edición de Video</h3>
+                <p>Video editado con CapCut y Kdenlive: cortes, transiciones, títulos y ajustes de audio.</p>
+                <div class="tarjeta-tags">
+                    <span>CapCut</span><span>Kdenlive</span>
+                </div>
+                <a href="index4.html" class="tarjeta-link" target="_blank">Ver videos</a>
+            </div>
+        </article>
+
+        <!-- Proyecto: Sistema Inventario VB6 -->
+        <article class="tarjeta" data-categoria="web">
+            <div class="tarjeta-icono">
+    <img src="pngwing.com (7).png" alt="Logo del proyecto">
+</div>
+            <div class="tarjeta-info">
+                <span class="etiqueta">Sistema</span>
+                <h3>Sistema de Inventario</h3>
+                <p>Sistema de gestión de inventario desarrollado en Visual Basic 6.0 con base de datos Access.</p>
+                <div class="tarjeta-tags">
+                    <span>Visual Basic 6</span><span>Access</span>
+                </div>
+                <a href="#" class="tarjeta-link">Ver proyecto</a>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- ==================== PIE ==================== -->
+    <footer class="pie">
+        <p>Henry Bellorin · Portfolio 2026</p>
+        <p class="pie-links">
+            <a href="#">GitHub</a> ·
+            <a href="">LinkedIn</a> ·
+            <a href="">Correo</a>
+        </p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
