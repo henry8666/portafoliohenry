@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso &middot; HENRY</title>
+<style>
+  :root {
+    --ink: #f2f2f2;
+    --dim: #8a8a8a;
+    --line: #3a3a3a;
+    --bg: #050505;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Helvetica Neue", Inter, system-ui, -apple-system, sans-serif;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* Lluvia sobre toda la pantalla */
+  #rainfall {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* ---------- Columna izquierda: formulario ---------- */
+  .panel {
+    position: relative;
+    z-index: 2;
+    width: 46%;
+    min-width: 340px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px clamp(32px, 6vw, 96px);
+    background: linear-gradient(90deg, #050505 0%, #060606 70%, rgba(5,5,5,.55) 92%, rgba(5,5,5,0) 100%);
+  }
+  .brand {
+    position: absolute;
+    top: 40px;
+    letter-spacing: .55em;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--dim);
+  }
+  h1 {
+    font-size: clamp(34px, 5vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+  }
+  .sub {
+    color: var(--dim);
+    font-size: 14px;
+    margin: 0 0 34px;
+    max-width: 42ch;
+    line-height: 1.5;
+  }
+
+  .field { position: relative; margin-bottom: 26px; }
+  .field label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 8px;
+  }
+  .field label .req { color: #fff; }
+  .field input {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 16px;
+    padding: 8px 34px 10px 0;
+    outline: none;
+    transition: border-color .25s, box-shadow .25s;
+  }
+  .field input::placeholder { color: #4a4a4a; }
+  .field input:focus {
+    border-bottom-color: #fff;
+    box-shadow: 0 12px 24px -22px rgba(255,255,255,.9);
+  }
+  .field.invalid input { border-bottom-color: #ff5a5a; }
+  .error {
+    font-size: 11.5px;
+    color: #ff6b6b;
+    min-height: 15px;
+    margin-top: 6px;
+    letter-spacing: .02em;
+  }
+  .peek {
+    position: absolute;
+    right: 0; bottom: 36px;
+    background: none; border: 0;
+    color: var(--dim);
+    font-size: 11px;
+    letter-spacing: .12em;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .peek:hover, .peek:focus-visible { color: #fff; }
+
+  .submit {
+    width: 100%;
+    margin-top: 10px;
+    padding: 16px 20px;
+    background: #fff;
+    color: #050505;
+    border: 1px solid #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .25s, color .25s, letter-spacing .25s;
+  }
+  .submit:hover { background: transparent; color: #fff; letter-spacing: .32em; }
+  .submit:disabled { opacity: .5; cursor: progress; }
+
+  .swap {
+    margin-top: 26px;
+    font-size: 13px;
+    color: var(--dim);
+  }
+  .swap button {
+    background: none; border: 0; padding: 0;
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+  }
+  .swap button:hover { border-bottom-color: #fff; }
+
+  .notice {
+    margin-top: 22px;
+    font-size: 11.5px;
+    color: #6f6f6f;
+    line-height: 1.5;
+    border-left: 2px solid var(--line);
+    padding-left: 12px;
+  }
+  .ok {
+    margin-top: 18px;
+    font-size: 13px;
+    color: #9ff5c8;
+    min-height: 18px;
+  }
+
+  /* ---------- Columna derecha: ilustracion ---------- */
+  .art {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: 68%;
+    z-index: 1;
+    background-image: url("samurai.jpg");
+    background-size: cover;
+    background-position: center right;
+    filter: grayscale(1) contrast(1.2) brightness(1);
+    overflow: hidden;
+  }
+  .art video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center right;
+    display: block;
+  }
+  .art::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, #050505 0%, rgba(5,5,5,.45) 26%, rgba(5,5,5,0) 58%);
+  }
+
+  /* Corte de espada al acceder */
+  #slash {
+    position: fixed; inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0;
+  }
+  #slash.cut { animation: cut .55s ease-out forwards; }
+  @keyframes cut {
+    0%   { opacity: 0; }
+    12%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Animacion de entrada escalonada */
+  .stagger > * {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: rise .7s cubic-bezier(.22,.7,.3,1) forwards;
+  }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  @media (max-width: 820px) {
+    body { display: block; }
+    .panel {
+      width: 100%;
+      min-width: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,.82) 32%, rgba(5,5,5,.94) 100%);
+      padding: 210px 24px 48px;
+    }
+    .art {
+      width: 100%;
+      background-position: top center;
+      filter: grayscale(1) contrast(1.15) brightness(.9);
+    }
+    .art video { object-position: top center; }
+    .art::after { background: linear-gradient(180deg, rgba(5,5,5,0) 0%, rgba(5,5,5,.25) 30%, rgba(5,5,5,.8) 100%); }
+  }
+  .boton-volver {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 999;
+    padding: 12px 22px;
+    font-family: "Helvetica Neue", Inter, system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 1px;
+
+    color: #0ff;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #0ff;
+    border-radius: 10px;
+    text-shadow: 0 0 6px #0ff;
+
+    animation: latido-neon 1.5s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+@keyframes latido-neon {
+    0% {
+        box-shadow: 0 0 6px #0ff, 0 0 12px #0ff;
+    }
+    50% {
+        box-shadow: 0 0 16px #0ff, 0 0 32px #0ff, 0 0 48px #0ff;
+    }
+    100% {
+        box-shadow: 0 0 6px #0ff, 0 0 12px #0ff;
+    }
+}
+
+.boton-volver:hover {
+    background: #0ff;
+    color: #000;
+    text-shadow: none;
+    animation: none;
+    box-shadow: 0 0 15px #0ff, 0 0 30px #0ff, 0 0 45px #0ff;
+}
+</style>
+</head>
+<body>
+    <a href="../index.html" class="boton-volver">← Volver al portafolio</a>
+    
+</body>
+
+<div class="art" aria-hidden="true">
+  <video id="artVideo" autoplay muted loop playsinline preload="auto" poster="samurai.jpg">
+    <source src="samurai_loop.mp4" type="video/mp4">
+  </video>
+</div>
+<canvas id="rainfall" aria-hidden="true"></canvas>
+<canvas id="slash" aria-hidden="true"></canvas>
+
+<main class="panel">
+  <div class="brand">HENRY</div>
+
+  <form id="authForm" novalidate autocomplete="on">
+    <div class="stagger" id="stagger">
+      <h1 id="title">Sign in</h1>
+      <p class="sub" id="subtitle">Proyecto bajo la lluvia creado por HENRY BELLORIN.</p>
+
+      <div class="field" id="f-name" hidden>
+        <label for="fullname">Nombre completo <span class="req">*</span></label>
+        <input id="fullname" name="fullname" type="text" autocomplete="name" placeholder="Henry Bellorin">
+        <div class="error" data-for="fullname"></div>
+      </div>
+
+      <div class="field" id="f-user">
+        <label for="username">Usuario <span class="req">*</span></label>
+        <input id="username" name="username" type="text" autocomplete="username" placeholder="henry">
+        <div class="error" data-for="username"></div>
+      </div>
+
+      <div class="field" id="f-mail" hidden>
+        <label for="email">Correo <span class="req">*</span></label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="henry@correo.com">
+        <div class="error" data-for="email"></div>
+      </div>
+
+      <div class="field" id="f-pass">
+        <label for="password">Contrase&ntilde;a <span class="req">*</span></label>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+        <button class="peek" id="peek" type="button" aria-label="Mostrar contrase&ntilde;a">VER</button>
+        <div class="error" data-for="password"></div>
+      </div>
+
+      <button class="submit" id="submit" type="submit">Entrar</button>
+      <div class="ok" id="ok" role="status" aria-live="polite"></div>
+
+      <p class="swap" id="swapText">
+        <span id="swapLabel">&iquest;A&uacute;n no tienes cuenta?</span>
+        <button type="button" id="swap">Crear una</button>
+      </p>
+
+      <p class="notice">Demostraci&oacute;n visual: no hay servidor detr&aacute;s, los datos no se env&iacute;an ni se guardan. Para un acceso real hace falta autenticaci&oacute;n en el servidor sobre HTTPS.</p>
+    </div>
+  </form>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Lluvia en el lienzo ---------- */
+  const canvas = document.getElementById('rainfall');
+  const ctx = canvas.getContext('2d');
+  const drops = [];
+  const splashes = [];
+  let W = 0, H = 0;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.floor(W * dpr);
+    canvas.height = Math.floor(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buildDrops();
+  }
+
+  function newDrop() {
+    const depth = Math.random();          // 0 lejos, 1 cerca
+    return {
+      x: Math.random() * (W + 260) - 130,
+      y: Math.random() * -H,
+      len: 12 + depth * 34,
+      speed: 9 + depth * 17,
+      drift: 1.1 + depth * 1.9,
+      alpha: 0.10 + depth * 0.4,
+      width: 0.5 + depth * 1.1
+    };
+  }
+
+  function buildDrops() {
+    drops.length = 0;
+    const total = Math.round(Math.min(W * H / 5200, 320));
+    for (let i = 0; i < total; i++) drops.push(newDrop());
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineCap = 'round';
+
+    for (const d of drops) {
+      ctx.strokeStyle = 'rgba(235, 240, 255, ' + d.alpha.toFixed(3) + ')';
+      ctx.lineWidth = d.width;
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(d.x - d.drift * 2.4, d.y - d.len);
+      ctx.stroke();
+
+      d.x += d.drift;
+      d.y += d.speed;
+
+      if (d.y - d.len > H) {
+        // Salpicadura al tocar el suelo.
+        if (d.alpha > 0.3 && Math.random() < 0.5) {
+          splashes.push({ x: d.x, y: H - Math.random() * 6, r: 1, life: 1 });
+        }
+        Object.assign(d, newDrop());
+        d.y = -d.len - Math.random() * 120;
+      }
+    }
+
+    for (let i = splashes.length - 1; i >= 0; i--) {
+      const s = splashes[i];
+      s.r += 0.9;
+      s.life -= 0.06;
+      if (s.life <= 0) { splashes.splice(i, 1); continue; }
+      ctx.strokeStyle = 'rgba(235, 240, 255, ' + (s.life * 0.35).toFixed(3) + ')';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.ellipse(s.x, s.y, s.r * 2.2, s.r * 0.7, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  tick();
+
+  /* ---------- Corte de espada ---------- */
+  const slash = document.getElementById('slash');
+  const sctx = slash.getContext('2d');
+
+  function drawSlash() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    slash.width = Math.floor(W * dpr);
+    slash.height = Math.floor(H * dpr);
+    sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    sctx.clearRect(0, 0, W, H);
+
+    // Un tajo diagonal con brillo, como el filo pasando por la pantalla.
+    const g = sctx.createLinearGradient(0, H, W, 0);
+    g.addColorStop(0, 'rgba(255,255,255,0)');
+    g.addColorStop(0.45, 'rgba(255,255,255,.95)');
+    g.addColorStop(0.55, 'rgba(255,255,255,.95)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    sctx.strokeStyle = g;
+    sctx.lineWidth = 3;
+    sctx.shadowBlur = 26;
+    sctx.shadowColor = 'rgba(255,255,255,.9)';
+    sctx.beginPath();
+    sctx.moveTo(-40, H * 0.86);
+    sctx.lineTo(W + 40, H * 0.14);
+    sctx.stroke();
+
+    sctx.lineWidth = 1;
+    sctx.shadowBlur = 8;
+    sctx.beginPath();
+    sctx.moveTo(-40, H * 0.86 + 26);
+    sctx.lineTo(W + 40, H * 0.14 + 26);
+    sctx.stroke();
+  }
+
+  function triggerSlash() {
+    drawSlash();
+    slash.classList.remove('cut');
+    void slash.offsetWidth;
+    slash.classList.add('cut');
+  }
+
+  /* ---------- Formulario: acceso / registro ---------- */
+  const form = document.getElementById('authForm');
+  const title = document.getElementById('title');
+  const subtitle = document.getElementById('subtitle');
+  const swapBtn = document.getElementById('swap');
+  const swapLabel = document.getElementById('swapLabel');
+  const submit = document.getElementById('submit');
+  const ok = document.getElementById('ok');
+  const peek = document.getElementById('peek');
+  const password = document.getElementById('password');
+  const fName = document.getElementById('f-name');
+  const fMail = document.getElementById('f-mail');
+  const stagger = document.getElementById('stagger');
+
+  let mode = 'signin';
+
+  function animateIn() {
+    const items = stagger.children;
+    for (let i = 0; i < items.length; i++) {
+      items[i].style.animation = 'none';
+      void items[i].offsetWidth;                     // reinicia la animacion
+      items[i].style.animation = 'rise .7s cubic-bezier(.22,.7,.3,1) forwards';
+      items[i].style.animationDelay = (i * 70) + 'ms';
+    }
+  }
+  animateIn();
+
+  function setMode(next) {
+    mode = next;
+    const reg = mode === 'register';
+    fName.hidden = !reg;
+    fMail.hidden = !reg;
+    title.textContent = reg ? 'Register' : 'Sign in';
+    subtitle.textContent = reg
+      ? 'Elige tu nombre de guerra antes de cruzar la lluvia.'
+      : 'Bajo la lluvia, solo hace falta tu nombre y tu palabra.';
+    submit.textContent = reg ? 'Crear' : 'Entrar';
+    swapLabel.textContent = reg ? '\u00bfYa est\u00e1s registrado?' : '\u00bfA\u00fan no tienes cuenta?';
+    swapBtn.textContent = reg ? 'Inicia sesi\u00f3n' : 'Crear una';
+    password.setAttribute('autocomplete', reg ? 'new-password' : 'current-password');
+    ok.textContent = '';
+    clearErrors();
+    animateIn();
+  }
+
+  swapBtn.addEventListener('click', function () {
+    setMode(mode === 'register' ? 'signin' : 'register');
+  });
+
+  peek.addEventListener('click', function () {
+    const shown = password.type === 'text';
+    password.type = shown ? 'password' : 'text';
+    peek.textContent = shown ? 'VER' : 'OCULTAR';
+    peek.setAttribute('aria-label', shown ? 'Mostrar contrase\u00f1a' : 'Ocultar contrase\u00f1a');
+    password.focus();
+  });
+
+  function showError(id, msg) {
+    const box = form.querySelector('.error[data-for="' + id + '"]');
+    if (box) box.textContent = msg;
+    const field = document.getElementById(id);
+    if (field) field.parentElement.classList.toggle('invalid', Boolean(msg));
+  }
+
+  function clearErrors() {
+    const boxes = form.querySelectorAll('.error');
+    for (const b of boxes) b.textContent = '';
+    const fields = form.querySelectorAll('.field');
+    for (const f of fields) f.classList.remove('invalid');
+  }
+
+  form.addEventListener('input', function (e) {
+    if (e.target.id) showError(e.target.id, '');
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearErrors();
+    ok.textContent = '';
+
+    const reg = mode === 'register';
+    const user = document.getElementById('username').value.trim();
+    const pass = password.value;
+    let bad = false;
+
+    if (reg) {
+      const name = document.getElementById('fullname').value.trim();
+      const mail = document.getElementById('email').value.trim();
+      if (name.length < 3) { showError('fullname', 'Escribe tu nombre completo.'); bad = true; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { showError('email', 'Correo no v\u00e1lido.'); bad = true; }
+    }
+    if (!/^[a-zA-Z0-9._-]{3,20}$/.test(user)) {
+      showError('username', '3 a 20 caracteres: letras, n\u00fameros, . _ -');
+      bad = true;
+    }
+    if (pass.length < 8) {
+      showError('password', 'M\u00ednimo 8 caracteres.');
+      bad = true;
+    }
+    if (bad) {
+      const first = form.querySelector('.field.invalid input');
+      if (first) first.focus();
+      return;
+    }
+
+    // Sin servidor: solo simulamos la espera y confirmamos.
+    submit.disabled = true;
+    const original = submit.textContent;
+    submit.textContent = reg ? 'Creando...' : 'Entrando...';
+    window.setTimeout(function () {
+      submit.disabled = false;
+      submit.textContent = original;
+      ok.textContent = reg
+        ? 'Cuenta lista (simulada). Ya puedes iniciar sesi\u00f3n.'
+        : 'Acceso concedido (simulado). Bienvenido, ' + user + '.';
+      triggerSlash();
+      if (reg) window.setTimeout(function () { setMode('signin'); }, 1400);
+    }, 900);
+  });
+})();
+</script>
+
+</body>
+<body>
+  
+</html>

@@ -1,0 +1,236 @@
+/* ============================================ */
+/* CARRUSEL 3D + TARJETAS DE TEXTO CON LUZ      */
+/* HENRY BELLORIN                               */
+/* ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --- Botón para volver al portafolio --- */
+.btn-volver {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    display: inline-block;
+    padding: 10px 18px;
+    border: 2px solid #00ff41;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #00ff41;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 1px;
+    box-shadow: 0 0 12px rgba(0, 255, 65, 0.5);
+    transition: background 0.3s, box-shadow 0.3s, transform 0.1s;
+}
+
+.btn-volver:hover {
+    background: #00ff41;
+    color: #0a0a0a;
+    box-shadow: 0 0 22px rgba(0, 255, 65, 0.9);
+}
+
+.btn-volver:active {
+    transform: scale(0.96);
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 100%);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* --- Título con brillo neón animado --- */
+.titulo {
+    font-size: 34px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #00ff41;
+    margin-top: 40px;
+    animation: titulo-neon 2s ease-in-out infinite;
+}
+
+@keyframes titulo-neon {
+    0%, 100% {
+        text-shadow: 0 0 8px #00ff41, 0 0 20px #00ff41, 0 0 35px #00ff41;
+    }
+    50% {
+        text-shadow: 0 0 4px #00ff41, 0 0 10px #00ff41;
+    }
+}
+
+/* --- Escena: le da la perspectiva 3D --- */
+.escena {
+    width: 260px;
+    height: 320px;
+    margin: 60px auto;
+    perspective: 1600px;
+}
+
+/* --- Carrusel: el cilindro que gira --- */
+.carrusel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: girar 25s linear infinite;
+}
+
+.carrusel:hover {
+    animation-play-state: paused;
+}
+
+/* --- Cada posición del carrusel --- */
+.carrusel .tarjeta {
+    position: absolute;
+    width: 260px;
+    height: 320px;
+    transform: rotateY(calc(var(--i) * 60deg)) translateZ(380px);
+    -webkit-box-reflect: below 5px linear-gradient(transparent, transparent 55%, rgba(0, 0, 0, 0.35));
+}
+
+/* --- La tarjeta con la LUZ NEÓN --- */
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000;
+    cursor: pointer;
+    /* RESPLANDOR que sale hacia afuera (del color de la tarjeta) */
+    box-shadow: 0 0 22px var(--color);
+    transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+/* Esta es la luz que recorre el borde girando */
+.card-inner::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 160%;
+    height: 160%;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        var(--color) 60deg,
+        transparent 130deg,
+        transparent 360deg
+    );
+    animation: girar-luz 3s linear infinite;
+}
+
+@keyframes girar-luz {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* El contenido tapa el centro y deja solo el borde con luz (3px) */
+.card-content {
+    position: absolute;
+    inset: 3px;
+    border-radius: 11px;
+    z-index: 1;
+    background: #0d0d15;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 26px 22px;
+    transition: background 0.4s ease;
+    /* estas 2 líneas ayudan a que el texto se dibuje nítido en 3D */
+    -webkit-font-smoothing: antialiased;
+    backface-visibility: hidden;
+}
+
+/* ===== TARJETA SELECCIONADA (al hacer clic) ===== */
+.tarjeta.seleccionada .card-inner {
+    /* brilla mucho más y se agranda bastante */
+    box-shadow: 0 0 45px var(--color), 0 0 90px var(--color);
+    transform: scale(1.4);
+}
+
+.tarjeta.seleccionada .card-content {
+    /* el fondo se tiñe del color de la tarjeta */
+    background: color-mix(in srgb, var(--color) 22%, #0d0d15);
+}
+
+/* Título neón animado (del color de cada tarjeta) */
+.card-titulo {
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color);
+    margin-bottom: 16px;
+    animation: pulso-titulo 2s ease-in-out infinite;
+}
+
+@keyframes pulso-titulo {
+    0%, 100% {
+        text-shadow: 0 0 6px var(--color), 0 0 16px var(--color);
+    }
+    50% {
+        text-shadow: 0 0 12px var(--color), 0 0 28px var(--color);
+    }
+}
+
+/* Texto de la tarjeta (lo que escribes debajo del título) */
+.card-texto {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.6;
+    color: #ffffff;
+    /* caja oscura semitransparente detrás del texto para que SIEMPRE se lea */
+    background: rgba(0, 0, 0, 0.55);
+    padding: 12px 14px;
+    border-radius: 10px;
+    /* SIN sombra: la sombra hacía ver el texto borroso */
+}
+
+/* --- La animación que hace girar el carrusel --- */
+@keyframes girar {
+    from { transform: perspective(1000px) rotateY(0deg); }
+    to   { transform: perspective(1000px) rotateY(360deg); }
+}
+
+/* --- Aviso --- */
+.aviso {
+    margin-bottom: 30px;
+    color: #7a7a8a;
+    font-size: 14px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 600px) {
+    .escena {
+        width: 210px;
+        height: 270px;
+    }
+    .carrusel .tarjeta {
+        width: 210px;
+        height: 270px;
+        transform: rotateY(calc(var(--i) * 60deg)) translateZ(300px);
+    }
+    .titulo {
+        font-size: 26px;
+    }
+    .card-titulo {
+        font-size: 19px;
+    }
+    .card-texto {
+        font-size: 15px;
+    }
+}

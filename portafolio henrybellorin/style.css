@@ -1,0 +1,479 @@
+/* ============================================ */
+/* PORTFOLIO - HENRY BELLORIN                   */
+/* ESTILO CYBERPUNK / NEÓN VERDE                */
+/* ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #212121;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+/* ==================== ENCABEZADO ==================== */
+.hero {
+    position: relative;              /* necesario para las capas de lluvia */
+    overflow: hidden;                /* recorta lo que se salga */
+
+    /* Capa oscura encima de la imagen + tu imagen de fondo */
+    background:
+        linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0.6)),
+        url('fondo.png');
+    background-size: cover;           /* la imagen llena todo el espacio */
+    background-position: center;
+
+    padding: 120px 20px;
+    text-align: center;
+    border-bottom: 2px solid #00ff41;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+
+    /* Movimiento suave del fondo (va y viene lentamente) */
+    animation: mover-fondo 25s ease-in-out infinite alternate;
+}
+
+@keyframes mover-fondo {
+    from { background-position: center 40%; }
+    to   { background-position: center 60%; }
+}
+
+/* --- LLUVIA SUAVE (gotas, como cuando empieza a llover) --- */
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* Gotas pequeñas y separadas */
+    background-image:
+        radial-gradient(circle, rgba(200, 220, 255, 0.55) 1.5px, transparent 2px),
+        radial-gradient(circle, rgba(200, 220, 255, 0.40) 1px, transparent 2px);
+    background-size: 130px 220px, 200px 300px;
+    background-position: 0 0, 70px 0;
+    animation: gotas 3s linear infinite;
+}
+
+@keyframes gotas {
+    to { background-position: 0 220px, 70px 300px; }
+}
+
+/* El contenido del encabezado va por encima de la lluvia */
+.hero-contenido {
+    position: relative;
+    z-index: 2;
+}
+
+/* --- BOTÓN DE CURRÍCULUM (esquina superior derecha) --- */
+.btn-curriculum {
+    position:absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 3;                      /* por encima de la lluvia */
+    background: #00ff41;
+    color: #000000;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 0 10px #00ff41;
+    transition: all 0.3s;
+
+  display: inline-block;
+  width: auto;
+
+  padding: 9px 18px;
+  font-family: "Helvetica Neue", Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+
+  color: #0ff;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #0ff;
+  border-radius: 8px;
+  text-shadow: 0 0 6px #0ff;
+
+  animation: latido-neon 1.5s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+@keyframes latido-neon {
+  0% {
+    box-shadow: 0 0 6px #0ff, 0 0 12px #0ff;
+  }
+  50% {
+    box-shadow: 0 0 16px #0ff, 0 0 32px #0ff, 0 0 48px #0ff;
+  }
+  100% {
+    box-shadow: 0 0 6px #0ff, 0 0 12px #0ff;
+  }
+}
+
+.btn-curriculum:hover {
+  background: #0ff;
+  color: #000;
+  text-shadow: none;
+  animation: none;
+  box-shadow: 0 0 15px #0ff, 0 0 30px #0ff, 0 0 45px #0ff;
+}
+
+.hero h1,
+.nombre-texto {
+    font-family: 'Segoe UI', 'Arial Rounded MT Bold', Arial, sans-serif;
+    font-size: 82px;
+    font-weight: 700;
+    fill: none;                          /* letras HUECAS (sin relleno) */
+    stroke: #baffba;                     /* contorno claro = tubo de neón */
+    stroke-width: 2;
+    stroke-dasharray: 4000;             /* trazo largo (cubre todo el nombre) */
+    stroke-dashoffset: 4000;            /* empieza invisible */
+    animation: nombre-anim 8s ease-in-out infinite,
+               parpadeo-neon 4s ease-in-out infinite;
+    /* Brillo hacia afuera (sin rellenar el interior de las letras) */
+    filter: drop-shadow(0 0 4px #00ff41)
+            drop-shadow(0 0 12px #00ff41)
+            drop-shadow(0 0 30px rgba(0, 255, 65, 0.7));
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+/* El nombre se dibuja (contorno), se queda, se borra y vuelve a empezar */
+@keyframes nombre-anim {
+    0%   { stroke-dashoffset: 4000; }   /* invisible */
+    40%  { stroke-dashoffset: 0; }      /* ya dibujado (solo contorno) */
+    85%  { stroke-dashoffset: 0; }      /* se mantiene un rato */
+    100% { stroke-dashoffset: 4000; }   /* se borra y reinicia */
+}
+
+/* Pequeño parpadeo, como un letrero de neón real */
+@keyframes parpadeo-neon {
+    0%, 100%   { opacity: 1; }
+    48%        { opacity: 1; }
+    50%        { opacity: 0.75; }
+    52%        { opacity: 1; }
+}
+
+.nombre-svg {
+    width: 100%;
+    max-width: 750px;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+    overflow: visible;
+}
+
+.subtitulo {
+    font-size: 18px;
+    color: #00ff41;
+    margin-bottom: 8px;
+    text-shadow: 0 0 6px rgba(0, 255, 65, 0.6);
+}
+
+.descripcion {
+    font-size: 14px;
+    color: #7a7a8a;
+    letter-spacing: 1px;
+}
+
+/* ==================== FILTROS ==================== */
+.filtros {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 40px 20px 20px;
+}
+
+.filtro-btn {
+    background: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #00ff41;
+    padding: 10px 22px;
+    border-radius: 25px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 255, 65, 0.4);
+    transition: all 0.3s;
+}
+
+.filtro-btn:hover {
+    box-shadow: 0 0 12px #00ff41;
+}
+
+.filtro-btn.activo {
+    background: #00ff41;
+    color: #000000;
+    font-weight: bold;
+    box-shadow: 0 0 15px #00ff41;
+}
+
+/* ==================== PROYECTOS ==================== */
+.proyectos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 20px 40px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tarjeta {
+    position: relative;               /* base para las capas de luz */
+    background: #000;                 /* negro detrás: hace resaltar la luz */
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 3px;                     /* deja 3px de espacio para la luz del borde */
+    transition: transform 0.35s, box-shadow 0.35s, border-color 0.35s, opacity 0.35s, filter 0.35s;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 16px var(--color, #00ff41);   /* resplandor del color de la tarjeta */
+}
+
+/* --- LUZ NEÓN que recorre el borde de cada tarjeta --- */
+.tarjeta::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 180%;
+    height: 180%;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        var(--color, #00ff41) 60deg,
+        transparent 130deg,
+        transparent 360deg
+    );
+    animation: girar-luz 4s linear infinite;
+    z-index: 0;                      /* queda detrás del contenido */
+}
+
+/* Panel oscuro que tapa el centro y deja ver solo 3px de luz en el borde */
+.tarjeta::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    background: #2a2a2a;             /* mismo color que tenían las tarjetas */
+    border-radius: 10px;
+    z-index: 1;
+}
+
+/* El contenido de la tarjeta va por ENCIMA de la luz */
+.tarjeta-icono,
+.tarjeta-info {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes girar-luz {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* --- Un color distinto de luz para cada tarjeta --- */
+.proyectos .tarjeta:nth-of-type(1) { --color: #00ff41; }  /* verde  */
+.proyectos .tarjeta:nth-of-type(2) { --color: #00e5ff; }  /* cyan   */
+.proyectos .tarjeta:nth-of-type(3) { --color: #ff2e97; }  /* rosa   */
+.proyectos .tarjeta:nth-of-type(4) { --color: #ffb300; }  /* ámbar  */
+.proyectos .tarjeta:nth-of-type(5) { --color: #b026ff; }  /* morado */
+.proyectos .tarjeta:nth-of-type(6) { --color: #2e7bff; }  /* azul   */
+
+/* Cuando el mouse entra a la zona de proyectos, las OTRAS se opacan */
+.proyectos:hover .tarjeta {
+    opacity: 0.35;
+    filter: blur(1px);
+}
+
+/* La tarjeta seleccionada (donde está el mouse) se destaca y agranda */
+.proyectos:hover .tarjeta:hover {
+    opacity: 1;
+    filter: none;
+    transform: scale(1.12);
+    z-index: 10;
+    box-shadow: 0 0 35px var(--color, #00ff41);   /* brilla más con su propio color */
+}
+
+.tarjeta-icono {
+    font-size: 60px;
+    text-align: center;
+    padding: 30px 0;
+    background: #1a1a1a;
+}
+
+.tarjeta-icono img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.tarjeta-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.etiqueta {
+    display: inline-block;
+    background: #00ff41;
+    color: #000000;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    align-self: flex-start;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+}
+
+.tarjeta-info h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.tarjeta-info p {
+    font-size: 14px;
+    color: #b0b0c0;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+.tarjeta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.tarjeta-tags span {
+    background: #1a1a1a;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+.tarjeta-link {
+    display: inline-block;
+    background: transparent;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 0 5px rgba(0, 255, 65, 0.4);
+    transition: all 0.3s;
+}
+
+.tarjeta-link:hover {
+    background: #00ff41;
+    color: #000000;
+    box-shadow: 0 0 15px #00ff41;
+}
+
+/* ==================== PIE ==================== */
+.pie {
+    background: #1a1a1a;
+    text-align: center;
+    padding: 40px 20px;
+    color: #7a7a8a;
+    font-size: 14px;
+    border-top: 2px solid #00ff41;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+}
+
+.pie-links {
+    margin-top: 10px;
+}
+
+.pie-links a {
+    color: #00ff41;
+    text-decoration: none;
+    font-weight: bold;
+    text-shadow: 0 0 6px rgba(0, 255, 65, 0.5);
+}
+
+.pie-links a:hover {
+    text-decoration: underline;
+}
+
+/* ==================== RESPONSIVE (TELÉFONO) ==================== */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 768px) {
+    .proyectos {
+        grid-template-columns: 1fr;   /* una sola columna */
+        padding: 20px 20px 40px;
+    }
+}
+
+/* Teléfonos */
+@media (max-width: 600px) {
+    /* El encabezado: menos alto y el botón arriba centrado */
+    .hero {
+        padding: 90px 15px 40px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+        letter-spacing: 1px;
+    }
+
+    .subtitulo {
+        font-size: 15px;
+    }
+
+    .descripcion {
+        font-size: 12px;
+    }
+
+    /* Botón currículum más pequeño para que no se encime */
+    .btn-curriculum {
+        top: 12px;
+        right: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    /* Filtros: que quepan bien */
+    .filtros {
+        gap: 8px;
+        padding: 25px 12px 10px;
+    }
+
+    .filtro-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    /* Pie de página */
+    .pie {
+        padding: 30px 15px;
+    }
+}
+
+/* Teléfonos muy pequeños */
+@media (max-width: 360px) {
+    .hero h1 {
+        font-size: 25px;
+    }
+    .btn-curriculum {
+        font-size: 11px;
+        padding: 7px 10px;
+    }
+}

@@ -1,0 +1,153 @@
+/* ============================================ */
+/* GALERÍA DE VIDEOS - ESTILO NEÓN              */
+/* HENRY BELLORIN                               */
+/* ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 100%);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #fff;
+    padding-bottom: 60px;
+}
+
+/* --- Título con brillo neón animado --- */
+.titulo {
+    text-align: center;
+    font-size: 34px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #00ff41;
+    padding-top: 40px;
+    animation: titulo-neon 2s ease-in-out infinite;
+}
+
+@keyframes titulo-neon {
+    0%, 100% {
+        text-shadow: 0 0 8px #00ff41, 0 0 20px #00ff41, 0 0 35px #00ff41;
+    }
+    50% {
+        text-shadow: 0 0 4px #00ff41, 0 0 10px #00ff41;
+    }
+}
+
+/* --- Botón para volver al menú principal --- */
+.btn-menu {
+    display: block;
+    width: fit-content;
+    margin: 14px auto 30px;
+    padding: 12px 24px;
+    background: #00ff41;
+    color: #000000;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 25px;
+    box-shadow: 0 0 12px #00ff41;
+    transition: all 0.3s;
+}
+
+.btn-menu:hover {
+    background: #39ff14;
+    box-shadow: 0 0 22px #00ff41;
+    transform: translateY(-2px);
+}
+
+/* Zona del botón de abajo */
+.pie-volver {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* --- Galería: rejilla de videos --- */
+.galeria {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 28px;
+    padding: 0 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Cada tarjeta de video con LUZ NEÓN en el borde --- */
+.video-tarjeta {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000;
+    padding: 3px;                    /* espacio para la luz del borde */
+    box-shadow: 0 0 18px var(--color);
+}
+
+/* La luz que recorre el borde girando */
+.video-tarjeta::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 180%;
+    height: 180%;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        var(--color) 60deg,
+        transparent 130deg,
+        transparent 360deg
+    );
+    animation: girar-luz 4s linear infinite;
+    z-index: 0;
+}
+
+@keyframes girar-luz {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* La caja de adentro (encima de la luz) */
+.video-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.video-content {
+    position: relative;
+    background: #0d0d15;
+    border-radius: 11px;
+    overflow: hidden;
+}
+
+/* El video llena el ancho de la tarjeta */
+.video-content video {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #000;
+}
+
+/* Título debajo de cada video (del color de la tarjeta) */
+.video-titulo {
+    text-align: center;
+    padding: 12px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color);
+    text-shadow: 0 0 8px var(--color);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 600px) {
+    .galeria {
+        grid-template-columns: 1fr;
+        padding: 0 18px;
+    }
+    .titulo {
+        font-size: 26px;
+    }
+}
